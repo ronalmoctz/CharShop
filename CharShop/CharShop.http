@@ -1,0 +1,6 @@
+@CharShop_HostAddress = http://localhost:5254
+
+GET {{CharShop_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
