@@ -1,6 +1,8 @@
 ﻿using CharShop.DTO;
 using CharShop.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace CharShop.Controllers
 {
@@ -28,6 +30,21 @@ namespace CharShop.Controllers
 
             return Ok(new { message = "User registered successfully." });
 
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
+        {
+            var token = await _authService.LoginAsync(request.Email, request.Password);
+
+            if (string.IsNullOrEmpty(token))
+            {
+                Log.Warning("Login failed: invalid credentials");
+                return Unauthorized();
+            }
+
+            return Ok(new { token, message = "Login successful, welcome" });
         }
     }
 }
